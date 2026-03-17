@@ -1355,6 +1355,31 @@ forward OnCachedInit();
 	CHAIN_FORWARD:SSCANF_OnPlayerDisconnect(playerid, reason) = 1;
 #endif
 
+/**
+ * <library>sscanf</library>
+ * <remarks>
+ * Called when a player change names.
+ * </remarks>
+ */
+stock SSCANF__SetPlayerName(playerid, const name[])
+{
+	new 
+			SSCANF_value = SetPlayerName(playerid, name)
+		;
+
+	if (SSCANF_value == 1 && SSCANF_gInit == 1)
+	{
+		SSCANF_Join(playerid, name, bool:IsPlayerNPC(playerid));
+	}
+	return SSCANF_value;
+}
+#if defined _ALS_SetPlayerName
+	#undef SetPlayerName
+#else
+	#define _ALS_SetPlayerName
+#endif
+#define SetPlayerName SSCANF__SetPlayerName
+
 // Ensure that these purely internal natives can't be called from outside this
 // include.
 #define SSCANF_Init
@@ -1405,7 +1430,7 @@ forward OnCachedInit();
 #define EXTRN%0new%1; new%1;
 
 #if !defined string
-    #define string:
+	#define string:
 #endif
 
 #define player:%0;UNFORMAT__(%1) %0;UNFORMAT__(%1)
@@ -2081,11 +2106,11 @@ stock SSCANF_Debug()
 	printf(gap);
 	printf(" | Options:                             |");
 	printf(gap);
-    SSCANF_PrintOption(OLD_DEFAULT_NAME);
-    SSCANF_PrintOption(MATCH_NAME_PARTIAL);
-    SSCANF_PrintOption(CELLMIN_ON_MATCHES);
-    SSCANF_PrintOption(SSCANF_QUIET);
-    SSCANF_PrintOption(OLD_DEFAULT_KUSTOM);
+	SSCANF_PrintOption(OLD_DEFAULT_NAME);
+	SSCANF_PrintOption(MATCH_NAME_PARTIAL);
+	SSCANF_PrintOption(CELLMIN_ON_MATCHES);
+	SSCANF_PrintOption(SSCANF_QUIET);
+	SSCANF_PrintOption(OLD_DEFAULT_KUSTOM);
 	printf(" |     SSCANF_ALPHA:             0x%02x   |", SSCANF_GetOption__(SSCANF_ALPHA));
 	printf(" |     SSCANF_COLOUR_FORMS:      0x%02x   |", forms);
 	printf(" |         #RGB       (0x01):     %s   |", forms & 0x01 ? on : off);
@@ -2095,9 +2120,9 @@ stock SSCANF_Debug()
 	printf(" |         {RRGGBB}   (0x10):     %s   |", forms & 0x10 ? on : off);
 	printf(" |         0xRRGGBBAA (0x20):     %s   |", forms & 0x20 ? on : off);
 	printf(" |         RRGGBBAA   (0x40):     %s   |", forms & 0x40 ? on : off);
-    //SSCANF_PrintOption(SSCANF_COLOUR_FORMS);
-    SSCANF_PrintOption(SSCANF_ARGB);
-    SSCANF_PrintOption(MATCH_NAME_FIRST);
+	//SSCANF_PrintOption(SSCANF_COLOUR_FORMS);
+	SSCANF_PrintOption(SSCANF_ARGB);
+	SSCANF_PrintOption(MATCH_NAME_FIRST);
 	if (similarity < 0.0)
 	{
 		printf(" |     MATCH_NAME_SIMILARITY:     off   |");
@@ -2106,9 +2131,9 @@ stock SSCANF_Debug()
 	{
 		printf(" |     MATCH_NAME_SIMILARITY:  %6.3f   |", similarity);
 	}
-    SSCANF_PrintOption(ERROR_CODE_IN_RET);
-    SSCANF_PrintOption(WARNINGS_AS_ERRORS);
-    SSCANF_PrintOption(ERROR_CATEGORY_ONLY);
+	SSCANF_PrintOption(ERROR_CODE_IN_RET);
+	SSCANF_PrintOption(WARNINGS_AS_ERRORS);
+	SSCANF_PrintOption(ERROR_CATEGORY_ONLY);
 	printf(gap);
 	printf(line);
 	printf(gap);
@@ -2272,7 +2297,7 @@ stock sscanf(string[], format[], {Float,_}:...)
 				while(changepos < 16 && string[strpos] && string[strpos] != delim)
 				{
 					changestr[changepos++] = string[strpos++];
-    				} 
+					} 
 				changestr[changepos] = '\0'; 
 				setarg(paramPos,0,_:floatstr(changestr)); 
 			} 
@@ -2420,4 +2445,3 @@ stock sscanf(string[], format[], {Float,_}:...)
 	while (delim > ' ');
 	return 0;
 }
-

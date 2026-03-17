@@ -290,7 +290,7 @@ bool
 				// there's no point - it's just extra work and we know it's OK.
 				// We set the null before incrementing to ensure it's included
 				// in the output.
-				SscanfWarning(2, "String buffer overflow.");
+				//SscanfWarning(2, "String buffer overflow.");
 				// Removed the break - discard the rest of the string.
 				//break;
 			}
@@ -330,7 +330,7 @@ bool
 			++i;
 			if (i == length)
 			{
-				SscanfWarning(2, "String buffer overflow.");
+				//SscanfWarning(2, "String buffer overflow.");
 			}
 			else if (i < length)
 			{
@@ -365,7 +365,7 @@ bool
 			++i;
 			if (i == length)
 			{
-				SscanfWarning(2, "String buffer overflow.");
+				//SscanfWarning(2, "String buffer overflow.");
 			}
 			else if (i < length)
 			{
@@ -448,7 +448,7 @@ bool
 				while (val < g_iTrueMax)
 				{
 					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && !strincmp(name, string, len))
+					if (*conn && diff >= 0 && !strncmp(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -473,16 +473,16 @@ bool
 				}
 				break;
 			case SSCANF_OPTIONS_NONE:
-				// Original.
+				// Original
 				while (val < g_iTrueMax)
 				{
-					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && !strincmp(name, string, len))
+					if (*conn)
 					{
-						if (diff < best)
+						size_t name_len = strlen(name);
+						if (name_len == len && !strncmp(name, string, len))
 						{
 							*ret = val;
-							best = diff;
+							break;
 						}
 					}
 					++conn;
@@ -514,7 +514,7 @@ bool
 				while (val < g_iTrueMax)
 				{
 					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && !strincmp(name, string, len))
+					if (*conn && diff >= 0 && !strncmp(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -673,7 +673,7 @@ bool
 				while (val < g_iTrueMax)
 				{
 					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && *npc && !strincmp(name, string, len))
+					if (*conn && diff >= 0 && *npc && !strncmp(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -701,16 +701,16 @@ bool
 				}
 				break;
 			case SSCANF_OPTIONS_NONE:
-				// Original.
+				// Original
 				while (val < g_iTrueMax)
 				{
-					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && *npc && !strincmp(name, string, len))
+					if (*conn)
 					{
-						if (diff < best)
+						size_t name_len = strlen(name);
+						if (name_len == len && *npc && !strncmp(name, string, len))
 						{
 							*ret = val;
-							best = diff;
+							break;
 						}
 					}
 					++conn;
@@ -744,7 +744,7 @@ bool
 				while (val < g_iTrueMax)
 				{
 					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && *npc && !strincmp(name, string, len))
+					if (*conn && diff >= 0 && *npc && !strncmp(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -902,7 +902,7 @@ bool
 				while (val < g_iTrueMax)
 				{
 					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && !*npc && !strincmp(name, string, len))
+					if (*conn && diff >= 0 && !*npc && !strncmp(name, string, len))
 					{
 						*ret = val;
 						break;
@@ -930,16 +930,16 @@ bool
 				}
 				break;
 			case SSCANF_OPTIONS_NONE:
-				// Original.
+				// Original
 				while (val < g_iTrueMax)
 				{
-					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && !*npc && !strincmp(name, string, len))
+					if (*conn)
 					{
-						if (diff < best)
+						size_t name_len = strlen(name);
+						if (name_len == len && !*npc && !strncmp(name, string, len))
 						{
 							*ret = val;
-							best = diff;
+							break;
 						}
 					}
 					++conn;
@@ -973,7 +973,7 @@ bool
 				while (val < g_iTrueMax)
 				{
 					size_t diff = strlen(name) - len;
-					if (*conn && diff >= 0 && !*npc && !strincmp(name, string, len))
+					if (*conn && diff >= 0 && !*npc && !strncmp(name, string, len))
 					{
 						if (*ret != g_iInvalid)
 						{
@@ -1369,7 +1369,7 @@ int
 	// Add a null terminator.
 	if (i >= *length)
 	{
-		SscanfWarning(2, "String buffer overflow.");
+		//SscanfWarning(2, "String buffer overflow.");
 		*(*ret + *length - 1) = '\0';
 	}
 	else
@@ -1445,4 +1445,3 @@ int
 	DoL(input, ret);
 	return GetReturnDefault(input);
 }
-

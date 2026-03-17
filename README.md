@@ -1,4 +1,4 @@
-# sscanf 2.15.1
+# sscanf 2.16.0
 
 ## Introduction
 
@@ -3224,4 +3224,8 @@ the Initial Developer.  All Rights Reserved.
 * Added alternates via `|`.
 * `SSCANF_GetErrorSpecifier` to get the error position in failure cases.
 * `SSCANF_Debug` to dump a load of useful debugging information.
+
+### Modification sscanf 2.15.1 - 02/09/2025
+* Added hook `SSCANF_SetPlayerName`.
+* The letters `u`, `q`, `r` have been updated to account for the case and length of the player/bot name. It works when using `MATCH_NAME_SIMILARITY` = `-1.0` (default).
 
