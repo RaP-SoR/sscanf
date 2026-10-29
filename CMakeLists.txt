@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(sscanf LANGUAGES C CXX VERSION 2.16.0)
+project(sscanf LANGUAGES C CXX VERSION 2.16.1)
 
 set(CMAKE_CXX_STANDARD 17)
 

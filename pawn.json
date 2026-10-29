@@ -1,7 +1,7 @@
 {
-    "user": "rap-sor",
-    "repo": "sscanf",
-    "contributors": [
+	"user": "RaP-SoR",
+	"repo": "sscanf",
+	"contributors": [
 		"Cheaterman",
 		"DEntisT",
 		"Emmet_",
@@ -14,23 +14,20 @@
 		"Y_Less",
 		"ziggi"
 	],
-    "resources": [
-        {
-            "name": "^sscanf-(.+)-linux.tar.gz$",
-            "platform": "linux",
-            "archive": true,
-            "includes": ["pawno/include"],
-            "plugins": ["plugins/sscanf.so"]
-        },
-        {
-            "name": "^sscanf-(.*)-win32.zip$",
-            "platform": "windows",
-            "archive": true,
-            "includes": ["pawno/include"],
-            "plugins": ["plugins/sscanf.dll"]
-        }
-    ],
-    "runtime": {
-        "plugins": ["rap-sor/sscanf"]
-    }
+	"resources": [
+		{
+			"name": "^sscanf-(.+)-linux.tar.gz$",
+			"platform": "linux",
+			"archive": true,
+			"includes": ["pawno/include"],
+			"plugins": ["components/sscanf.so"]
+		},
+		{
+			"name": "^sscanf-(.*)-win32.zip$",
+			"platform": "windows",
+			"archive": true,
+			"includes": ["pawno/include"],
+			"plugins": ["components/sscanf.dll"]
+		}
+	]
 }
