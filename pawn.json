@@ -20,14 +20,14 @@
             "platform": "linux",
             "archive": true,
             "includes": ["pawno/include"],
-            "plugins": ["plugins/sscanf.so"]
+            "plugins": ["components/sscanf.so"]
         },
         {
             "name": "^sscanf-(.*)-win32.zip$",
             "platform": "windows",
             "archive": true,
             "includes": ["pawno/include"],
-            "plugins": ["plugins/sscanf.dll"]
+            "plugins": ["components/sscanf.dll"]
         }
     ],
     "runtime": {
