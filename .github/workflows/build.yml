@@ -13,7 +13,9 @@ on:
 
 jobs:
   build-windows-release:
-    runs-on: windows-latest
+    # windows-latest currently ships VS 2026; pin 2022 so the VS 17 generator resolves.
+    # (windows-2019 / VS 2019 hosted runners are retired on GitHub Actions.)
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
         with:
@@ -84,7 +86,7 @@ jobs:
             README.md
 
   create-release-packages:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: [build-windows-release, build-linux-release]
 
     steps:

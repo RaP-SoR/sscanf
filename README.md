@@ -3002,6 +3002,8 @@ cmake .. -A Win32 -G "Visual Studio 17 2022"
 cmake --build . --config Release
 ```
 
+CI uses the same Win32 / VS 2022 setup on `windows-2022` (GitHub no longer provides VS 2019 runners).
+
 Or with Ninja from a VS x86 Developer Prompt:
 
 ```bash
