@@ -17,7 +17,7 @@ jobs:
     # (windows-2019 / VS 2019 hosted runners are retired on GitHub Actions.)
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           clean: true
           submodules: recursive
@@ -34,7 +34,7 @@ jobs:
           cmake --build . --config Release
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-build
           path: |
@@ -47,7 +47,7 @@ jobs:
   build-linux-release:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           clean: true
           submodules: recursive
@@ -75,7 +75,7 @@ jobs:
           mv ./libsscanf.so ./sscanf.so
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux-build
           path: |
@@ -91,13 +91,13 @@ jobs:
 
     steps:
       - name: Download Windows artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: windows-build
           path: windows-files/
 
       - name: Download Linux artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: linux-build
           path: linux-files/
@@ -196,8 +196,9 @@ jobs:
           7z a -ttar -so -an * | 7z a -si linux-$env:VERSION.tar.gz
           cd ..
 
+      # Uploads CI artifacts only (not a GitHub Release). Tag/release publishing comes later.
       - name: Upload release packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-packages
           path: |
