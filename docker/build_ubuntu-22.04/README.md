@@ -1,10 +1,10 @@
-open.mp Linux build image
-=========================
+sscanf Linux build image (Ubuntu 22.04)
+=======================================
 
-How to use:
+Used by `docker/build.sh`. Prefer calling that script from the `docker/` directory:
 
-1. `docker build -t open.mp/build:ubuntu-22.04 .`
-1. `docker run --rm -ti -v /path/to/omp/sources:/omp -w /omp open.mp/build:ubuntu-22.04`
-1. ???
-1. Profit! Built open.mp is available in /path/to/omp/sources/build
-1. Note: You can use `-e CONFIG=Debug` or `-e CONFIG=RelWithDebInfo` in the `docker run` call to change the build type
+```bash
+UBUNTU_VERSION=22.04 ./build.sh
+```
+
+Build type defaults to `RelWithDebInfo`. Override with `-e CONFIG=Release` / `Debug`.

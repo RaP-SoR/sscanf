@@ -2982,10 +2982,10 @@ If you want to compile sscanf for yourself.
 You can clone the code using github.  Note that there are multiple submodules involved, so you are best using a recursive checkout:
 
 ```
-git clone --recursive https://github.com/Y-Less/sscanf/
+git clone --recursive https://github.com/rap-sor/sscanf/
 ```
 
-Note the use of the `--recursive` argument, because this repository contains submodules.  A useful setting when cloning recursive repos is:
+Note the use of the `--recursive` argument, because this repository contains submodules (`open.mp` SDK and `subhook`).  A useful setting when cloning recursive repos is:
 
 ```bash
 git config --global url."git@github.com:".insteadOf "https://github.com/"
@@ -2998,47 +2998,51 @@ Which allows you to push `https://` repos you have permissions on.
 ```bash
 mkdir build
 cd build
-cmake .. -A Win32 -T ClangCL
+cmake .. -A Win32 -G "Visual Studio 17 2022"
+cmake --build . --config Release
 ```
 
-Open Visual Studio and build the solution.
+Or with Ninja from a VS x86 Developer Prompt:
+
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
 
 ### Building On Linux
+
+Requires a 32-bit capable toolchain (`g++-multilib` or clang with multilib):
 
 ```bash
 mkdir build
 cd build
-# May need to configure this line.
-export CC=/usr/lib/llvm/13/bin/clang CXX=/usr/lib/llvm/13/bin/clang++
-cmake ..
-make
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32
+cmake --build .
 ```
-
-Change `Debug` to `Release` for final versions.
 
 ### Building With Docker
 
+Supported images: Ubuntu **22.04**, **24.04** (default), **26.04**.
+
 ```bash
 cd docker
-.\build.sh
+./build.sh
 ```
 
-You may need to set up some directories first:
+You may need to create the output directory first:
 
 ```bash
 mkdir build
-mkdir conan
 sudo chown 1000 build
-sudo chown 1000 conan
 ```
 
-Instead you run the script as root, and target a specific distro:
+Target a specific distro:
 
 ```bash
-UBUNTU_VERSION=18.04 sudo .\build.sh
+UBUNTU_VERSION=26.04 ./build.sh
 ```
 
-The output is in `docker/build/`
+The output is in `docker/build/`.
 
 ## License
 

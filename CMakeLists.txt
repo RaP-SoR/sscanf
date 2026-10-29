@@ -3,71 +3,60 @@ project(sscanf LANGUAGES C CXX VERSION 2.15.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include_directories(
-	robin-hood-hashing/src/include
-	string-view-lite/include
-	open.mp/include
-	span-lite/include
-	glm
-	amx
-	.
-)
+# open.mp Pawn is 32-bit; apply before SDK so any compiled deps match.
+if(UNIX)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32 -fPIC -O2 -w")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32 -fPIC -O2 -w")
+endif()
 
-add_definitions(
-	-DPROJECT_NAME="sscanf"
-	-DHAVE_STDINT_H=1
-	-DGLM_FORCE_SSE2=1
-	-DGLM_FORCE_QUAT_DATA_WXYZ=1
-	-DNOMINMAX=1
-	-Dnssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD
-	-Dspan_CONFIG_SELECT_SPAN=span_SPAN_NONSTD
-	-DPAWN_CELL_SIZE=32
+add_subdirectory(open.mp)
+
+set(SSCANF_SOURCES
+	amx/amx.c
+	amx/amxplugin.c
+	subhook/subhook.c
+	array.cpp
+	data.cpp
+	enum.cpp
+	kustom.cpp
+	specifiers.cpp
+	sscanf.cpp
+	utils.cpp
+	error.cpp
 )
 
 if(MSVC)
-	add_definitions(
-		-DWIN32
-		-D_CRT_SECURE_NO_DEPRECATE=1
-		-DWIN32_LEAN_AND_MEAN=1
-		-DSUBHOOK_STATIC
-	)
+	list(APPEND SSCANF_SOURCES sscanf.def)
+elseif(UNIX)
+	list(APPEND SSCANF_SOURCES amx/getch.c)
+endif()
 
-	add_library(${PROJECT_NAME} SHARED
-		amx/amx.c
-		amx/amxplugin.c
-		sscanf.def
-		subhook/subhook.c
-		array.cpp
-		data.cpp
-		enum.cpp
-		kustom.cpp
-		specifiers.cpp
-		sscanf.cpp
-		utils.cpp
-		error.cpp
+add_library(${PROJECT_NAME} SHARED ${SSCANF_SOURCES})
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+	amx
+	.
+	subhook
+)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+	PROJECT_NAME="sscanf"
+	HAVE_STDINT_H=1
+	PAWN_CELL_SIZE=32
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE OMP-SDK)
+
+if(MSVC)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE
+		WIN32
+		_CRT_SECURE_NO_DEPRECATE=1
+		WIN32_LEAN_AND_MEAN=1
+		SUBHOOK_STATIC
 	)
 elseif(UNIX)
-	add_definitions(
-		-DLINUX=1
-	)
-
-	set(CMAKE_C_FLAGS "-m32 -fPIC -O2 -w")
-	set(CMAKE_CXX_FLAGS "-m32 -fPIC -O2 -w")
-
-	add_library(${PROJECT_NAME} SHARED
-		amx/amx.c
-		amx/amxplugin.c
-		amx/getch.c
-		subhook/subhook.c
-		array.cpp
-		data.cpp
-		enum.cpp
-		kustom.cpp
-		specifiers.cpp
-		sscanf.cpp
-		utils.cpp
-	)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX=1)
+	target_link_options(${PROJECT_NAME} PRIVATE -m32)
 endif()
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT sscanf)
-

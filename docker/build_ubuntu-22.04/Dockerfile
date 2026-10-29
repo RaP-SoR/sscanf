@@ -2,23 +2,20 @@ FROM ubuntu:22.04
 RUN \
     dpkg --add-architecture i386 && \
     apt-get update && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
         cmake \
         ninja-build \
-        clang-11 \
-        python3-pip \
-        gcc-9-multilib \
-        g++-9-multilib \
-        libstdc++-11-dev:i386 \
+        clang \
+        g++-multilib \
+        gcc-multilib \
+        libstdc++-dev:i386 \
     && \
-    useradd -m user && \
-    su user -c 'pip3 install --user conan'
+    useradd -m user
 
 USER user
 
-ENV CC=/usr/bin/clang-11 \
-    CXX=/usr/bin/clang++-11 \
-    PATH=~/.local/bin:${PATH}
+ENV CC=/usr/bin/clang \
+    CXX=/usr/bin/clang++
 
 COPY docker-entrypoint.sh /
 CMD /docker-entrypoint.sh
