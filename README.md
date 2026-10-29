@@ -1,4 +1,4 @@
-# sscanf 2.16.0
+# sscanf 2.16.1
 
 ## Introduction
 
@@ -3235,6 +3235,11 @@ the Initial Developer.  All Rights Reserved.
 * Added hook `SSCANF_SetPlayerName`.
 * The letters `u`, `q`, `r` have been updated to account for the case and length of the player/bot name. It works when using `MATCH_NAME_SIMILARITY` = `-1.0` (default).
 
+### sscanf 2.16.1
+
+sampctl/open.mp packaging fix: `pawn.json` resources now point at `components/sscanf.*`
+(matching the release archives). Removed legacy `runtime.plugins` self-reference so
+`sampctl ensure` does not try to install sscanf as a SA:MP plugin.
 ### sscanf 2.16.0
 * Version aligned for the open.mp fork builds (current open.mp SDK).
 * Windows/Linux CI packages as component + plugin.
