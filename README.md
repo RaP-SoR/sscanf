@@ -3235,3 +3235,7 @@ the Initial Developer.  All Rights Reserved.
 * Added hook `SSCANF_SetPlayerName`.
 * The letters `u`, `q`, `r` have been updated to account for the case and length of the player/bot name. It works when using `MATCH_NAME_SIMILARITY` = `-1.0` (default).
 
+### sscanf 2.16.0
+* Version aligned for the open.mp fork builds (current open.mp SDK).
+* Windows/Linux CI packages as component + plugin.
+
