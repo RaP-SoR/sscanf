@@ -139,9 +139,6 @@ jobs:
           mkdir components
           copy "..\$dllPath" components\sscanf.dll
 
-          mkdir plugins
-          copy "..\$dllPath" plugins\sscanf.dll
-
           mkdir pawno
           cd pawno
           mkdir include
@@ -177,9 +174,6 @@ jobs:
 
           mkdir components
           copy "..\$soPath" components\sscanf.so
-
-          mkdir plugins
-          copy "..\$soPath" plugins\sscanf.so
 
           mkdir pawno
           cd pawno
