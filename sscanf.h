@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.15.1
+ *  sscanf 2.16.0
  *
  *  Version: MPL 1.1
  *
@@ -43,8 +43,8 @@
 #pragma once
 
 #define SSCANF_VERSION_MAJOR 2
-#define SSCANF_VERSION_MINOR 15
-#define SSCANF_VERSION_BUILD 1
+#define SSCANF_VERSION_MINOR 16
+#define SSCANF_VERSION_BUILD 0
 
 #include <stdint.h>
 

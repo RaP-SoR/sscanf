@@ -4,21 +4,20 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "*"
-      - "*/*"
-      - "**"
-    tags: ['v*']
+      - '**'
+    tags:
+      - 'v*'
   pull_request:
     branches:
-      - "*"
-      - "*/*"
-      - "**"
+      - '**'
 
 jobs:
   build-windows-release:
-    runs-on: windows-latest
+    # windows-latest currently ships VS 2026; pin 2022 so the VS 17 generator resolves.
+    # (windows-2019 / VS 2019 hosted runners are retired on GitHub Actions.)
+    runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           clean: true
           submodules: recursive
@@ -27,23 +26,15 @@ jobs:
       - name: Check CMake version
         run: cmake --version
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Install latest conan
-        run: |
-          python -m pip install --upgrade pip
-          pip install conan
-          
       - name: Generate build files
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release .. -G "Visual Studio 17 2022" -A Win32
           cmake --build . --config Release
-          
+
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-build
           path: |
@@ -54,9 +45,9 @@ jobs:
             README.md
 
   build-linux-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           clean: true
           submodules: recursive
@@ -65,15 +56,7 @@ jobs:
       - name: Install packages
         run: |
           sudo apt-get update
-          sudo apt-get install g++-multilib cmake
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-
-      - name: Install latest conan
-        run: |
-          python -m pip install --upgrade pip
-          pip install conan
+          sudo apt-get install -y g++-multilib cmake
 
       - name: Generate build files
         run: |
@@ -90,9 +73,9 @@ jobs:
         run: |
           cd build
           mv ./libsscanf.so ./sscanf.so
-          
+
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux-build
           path: |
@@ -103,118 +86,119 @@ jobs:
             README.md
 
   create-release-packages:
-    runs-on: windows-latest
+    runs-on: windows-2022
     needs: [build-windows-release, build-linux-release]
-    
+
     steps:
       - name: Download Windows artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: windows-build
           path: windows-files/
-        
+
       - name: Download Linux artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: linux-build
           path: linux-files/
-        
+
       - name: Check files structure
         run: |
           echo "=== Windows files ==="
           Get-ChildItem -Path "windows-files" -Recurse -Force
           echo "=== Linux files ==="
           Get-ChildItem -Path "linux-files" -Recurse -Force
-        
+
       - name: Get version
         run: |
           $version = $env:GITHUB_SHA.Substring(0, 7)
           echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
           echo "Version: $version"
-            
+
       - name: Install 7-Zip
         run: choco install 7zip -y
-            
+
       - name: Create Windows package
         run: |
           $dllPath = "windows-files/build/Release/sscanf.dll"
-          if (-not (Test-Path $dllPath)) { 
+          if (-not (Test-Path $dllPath)) {
             Write-Host "Available files:"
             Get-ChildItem -Path "windows-files" -Recurse
-            throw "Windows sscanf.dll not found at: $dllPath" 
+            throw "Windows sscanf.dll not found at: $dllPath"
           }
-          
+
           mkdir windows-package
           cd windows-package
-          
+
           copy "..\$dllPath" amxsscanf.dll
           copy ..\windows-files\LICENSE LICENSE
           copy ..\windows-files\pawn.json pawn.json
           copy ..\windows-files\README.md README.md
           copy ..\windows-files\sscanf2.inc .\
-          
+
           mkdir components
           copy "..\$dllPath" components\sscanf.dll
-          
+
           mkdir plugins
           copy "..\$dllPath" plugins\sscanf.dll
-          
+
           mkdir pawno
           cd pawno
           mkdir include
           copy ..\..\windows-files\sscanf2.inc include\sscanf2.inc
           cd ..
-          
+
           mkdir qawno
           cd qawno
           mkdir include
           copy ..\..\windows-files\sscanf2.inc include\sscanf2.inc
           cd ..
-          
+
           7z a -tzip windows-$env:VERSION.zip *
           cd ..
-            
+
       - name: Create Linux package
         run: |
           $soPath = "linux-files/build/sscanf.so"
-          if (-not (Test-Path $soPath)) { 
+          if (-not (Test-Path $soPath)) {
             Write-Host "Available files:"
             Get-ChildItem -Path "linux-files" -Recurse
-            throw "Linux sscanf.so not found at: $soPath" 
+            throw "Linux sscanf.so not found at: $soPath"
           }
-          
+
           mkdir linux-package
           cd linux-package
-          
+
           copy "..\$soPath" amxsscanf.so
           copy ..\linux-files\LICENSE LICENSE
           copy ..\linux-files\pawn.json pawn.json
           copy ..\linux-files\README.md README.md
           copy ..\linux-files\sscanf2.inc .\
-          
+
           mkdir components
           copy "..\$soPath" components\sscanf.so
-          
+
           mkdir plugins
           copy "..\$soPath" plugins\sscanf.so
-          
+
           mkdir pawno
           cd pawno
           mkdir include
           copy ..\..\linux-files\sscanf2.inc include\sscanf2.inc
           cd ..
-          
+
           mkdir qawno
           cd qawno
           mkdir include
           copy ..\..\linux-files\sscanf2.inc include\sscanf2.inc
           cd ..
-          
+
           7z a -ttar -so -an * | 7z a -si linux-$env:VERSION.tar.gz
           cd ..
-            
+
+      # Uploads CI artifacts only (not a GitHub Release). Tag/release publishing comes later.
       - name: Upload release packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-packages
           path: |

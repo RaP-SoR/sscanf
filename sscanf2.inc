@@ -1,5 +1,5 @@
 /*
- *  sscanf 2.15.1
+ *  sscanf 2.16.0
  *
  *  Version: MPL 1.1
  *
@@ -157,8 +157,8 @@ const SSCANF_VERSION_MAJOR = 2;
  * The sscanf minor version number.
  * </remarks>
  */
-const SSCANF_VERSION_MINOR = 15;
-#define SSCANF_VERSION_MINOR 15
+const SSCANF_VERSION_MINOR = 16;
+#define SSCANF_VERSION_MINOR 16
 
 /**
  * <library>sscanf</library>
@@ -166,8 +166,8 @@ const SSCANF_VERSION_MINOR = 15;
  * The sscanf build number.
  * </remarks>
  */
-const SSCANF_VERSION_BUILD = 1;
-#define SSCANF_VERSION_BUILD 1
+const SSCANF_VERSION_BUILD = 0;
+#define SSCANF_VERSION_BUILD 0
 
 /**
  * <library>sscanf</library>
